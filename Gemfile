@@ -5,9 +5,15 @@ gem 'rails', '5.1.4'
 gem 'jsonapi-rails', '~> 0.3'
 gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.7'
+gem 'validate_url', '~> 1.0'
 
 group :development do
   gem 'listen', '~> 3.1'
+end
+
+group :development, :test do
+  gem 'factory_bot_rails', '~> 4.8'
+  gem 'faker', '~> 1.8'
 end
 
 group :test do
