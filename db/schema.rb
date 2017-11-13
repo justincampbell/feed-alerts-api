@@ -14,10 +14,11 @@ ActiveRecord::Schema.define(version: 20171110185356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "citext"
 
   create_table "feeds", force: :cascade do |t|
     t.string "url", null: false
-    t.string "name", null: false
+    t.citext "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
