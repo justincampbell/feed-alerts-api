@@ -5,6 +5,7 @@ gem 'rails', '5.1.4'
 gem 'jsonapi-rails', '~> 0.3'
 gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.7'
+gem 'rack-cors', '~> 1.0.2'
 gem 'validate_url', '~> 1.0'
 
 group :development do
