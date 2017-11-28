@@ -11,10 +11,6 @@ RSpec.configure do |config|
   config.order = :random
   Kernel.srand config.seed
 
-  if config.files_to_run.one?
-    config.default_formatter = "doc"
-  end
-
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end

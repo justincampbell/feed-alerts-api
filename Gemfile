@@ -2,10 +2,11 @@ source 'https://rubygems.org'
 
 gem 'rails', '5.1.4'
 
+gem 'feedjira', '~> 2.1'
 gem 'jsonapi-rails', '~> 0.3'
 gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.7'
-gem 'rack-cors', '~> 1.0.2'
+gem 'rack-cors', '~> 1.0'
 gem 'validate_url', '~> 1.0'
 
 group :development do
@@ -20,4 +21,6 @@ end
 group :test do
   gem 'rspec-json_expectations', '~> 2.1'
   gem 'rspec-rails', '~> 3.7'
+  gem 'vcr', '~> 3.0'
+  gem 'webmock', '~> 3.1'
 end
