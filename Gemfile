@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '5.1.4'
 
+gem 'active_model_serializers', '~> 0.10'
 gem 'feedjira', '~> 2.1'
 gem 'jsonapi-rails', '~> 0.3'
 gem 'pg', '~> 0.21'
