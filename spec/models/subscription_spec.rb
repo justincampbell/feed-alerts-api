@@ -3,6 +3,19 @@ require 'rails_helper'
 RSpec.describe Subscription do
   subject(:subscription) { build(:subscription) }
 
+  it "does not allow duplicate subscriptions for the same user" do
+    subscription.save
+
+    new_subscription = Subscription.new(
+      feed: subscription.feed,
+      user: subscription.user
+    )
+
+    expect(new_subscription).to_not be_valid
+    expect(new_subscription.errors[:feed])
+      .to include("already subscribed to")
+  end
+
   describe "#include_title" do
     subject(:include_title) { subscription.include_title }
 
