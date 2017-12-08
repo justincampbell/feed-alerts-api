@@ -1,9 +1,12 @@
 class SubscriptionsController < ApplicationController
   def create
-    subscription = Subscription.new(create_params)
+    unless current_user
+      render_jsonapi_error 403, "Forbidden"
+      return
+    end
 
-    # TODO: Assign current user
-    subscription.user = User.first
+    subscription = Subscription.new(create_params)
+    subscription.user = current_user
 
     if subscription.save
       render jsonapi: subscription,

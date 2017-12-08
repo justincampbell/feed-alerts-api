@@ -4,6 +4,7 @@ class VerificationCode < ApplicationRecord
 
   # TODO: Index table
   # TODO: Expire codes
+  # TODO: Delete codes after verifying
 
   attribute :code, :string, default: -> { generate }
 

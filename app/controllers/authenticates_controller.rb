@@ -50,20 +50,4 @@ class AuthenticatesController < ApplicationController
     raw = authentication_params[:sms_number]
     Phonelib.parse(raw).sanitized
   end
-
-  def render_jsonapi_error(status, title, detail = nil)
-    detail ||= title
-
-    json = {
-      errors: [
-        {
-          status: status,
-          title: title,
-          detail: detail
-        }
-      ]
-    }
-
-    render json: json, status: status
-  end
 end

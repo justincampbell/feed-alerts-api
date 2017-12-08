@@ -17,4 +17,20 @@ class ApplicationController < ActionController::API
     return unless authorization_header.match(AUTHORIZATION_BEARER_PREFIX)
     authorization_header.gsub(AUTHORIZATION_BEARER_PREFIX, '')
   end
+
+  def render_jsonapi_error(status, title, detail = nil)
+    detail ||= title
+
+    json = {
+      errors: [
+        {
+          status: status,
+          title: title,
+          detail: detail
+        }
+      ]
+    }
+
+    render json: json, status: status
+  end
 end
