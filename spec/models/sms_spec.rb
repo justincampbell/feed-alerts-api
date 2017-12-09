@@ -4,10 +4,18 @@ RSpec.describe SMS do
   subject(:sms) { described_class.new }
 
   describe ".normalize" do
+    it "passes through nil" do
+      expect(SMS.normalize(nil)).to eq(nil)
+    end
+
     it "normalizes a number" do
       expect(SMS.normalize("2345678900")).to eq("+12345678900")
       expect(SMS.normalize("(234) 567-8900")).to eq("+12345678900")
       expect(SMS.normalize("+1 (234) 567-8900")).to eq("+12345678900")
+    end
+
+    it "special cases normalized numbers starting with +1" do
+      expect(SMS.normalize("1234567890")).to eq("+11234567890")
     end
   end
 

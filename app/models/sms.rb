@@ -1,6 +1,16 @@
 class SMS
   def self.normalize(number)
-    Phonelib.parse(number).e164
+    result = Phonelib.parse(number).e164
+
+    return unless result
+
+    # If Phonelib parses a number starting with 1, it assume it's a country
+    # code and returns an invalid number.
+    if result.start_with?("+1") && result.length == 11
+      result.gsub!(/^\+1/, "+11")
+    end
+
+    result
   end
 
   def handle_message(from, body)
