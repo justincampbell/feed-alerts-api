@@ -14,14 +14,8 @@ class AuthenticatesController < ApplicationController
 
   def request_code
     code = VerificationCode.store(sms_number)
-
-    puts
-    puts "*" * 80
-    puts " " * 38 + code
-    puts "*" * 80
-    puts
-    # TODO: Send code
-
+    text = "#{code} is your verification code"
+    SMS.new.send sms_number, text
     head :accepted
   end
 

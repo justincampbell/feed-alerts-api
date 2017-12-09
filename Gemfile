@@ -9,6 +9,7 @@ gem 'pg', '~> 0.21'
 gem 'phonelib', '~> 0.6'
 gem 'puma', '~> 3.7'
 gem 'rack-cors', '~> 1.0'
+gem 'twilio-ruby', '~> 5.5'
 gem 'validate_url', '~> 1.0'
 
 group :development do

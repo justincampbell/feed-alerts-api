@@ -63,13 +63,18 @@ RSpec.describe AuthenticatesController do
     let(:sms_number) { Faker::PhoneNumber.cell_phone }
 
     it "generates a code, stores it, and sends it to the number" do
+      sanitized = Phonelib.parse(sms_number).sanitized
+
+      expect_any_instance_of(SMS)
+        .to receive(:send)
+        .with(sanitized, anything)
+
       post "/authenticate/request-code", params: {
         sms_number: sms_number
       }
 
       expect(response.status).to eq(202)
 
-      sanitized = Phonelib.parse(sms_number).sanitized
       expect(VerificationCode.where(destination: sanitized).count).to eq(1)
     end
   end
