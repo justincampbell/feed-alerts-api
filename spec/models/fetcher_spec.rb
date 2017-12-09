@@ -9,14 +9,28 @@ RSpec.describe Fetcher do
     expect(fetcher.url).to eq(url)
   end
 
+  describe "#cache_key" do
+    subject(:cache_key) { fetcher.cache_key }
+
+    it { is_expected.to start_with("fetcher-") }
+  end
+
   describe "#fetch" do
-    subject(:fetch) { fetcher.fetch }
+    it "caches the response" do
+      expect(Net::HTTP)
+        .to receive(:get_response)
+        .once
+        .and_return(double(body: "test"))
+
+      fetcher.fetch
+      fetcher.fetch
+    end
 
     context "integration tests", :vcr do
       let(:url) { "http://crossfitwc.com/category/wod/feed/" }
 
       it "returns a feed response" do
-        response = fetch
+        response = fetcher.fetch
         expect(response.title).to match(/crossfit/i)
       end
     end

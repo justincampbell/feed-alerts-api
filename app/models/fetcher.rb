@@ -7,8 +7,14 @@ class Fetcher
     @url = url
   end
 
+  def cache_key
+    [:fetcher, url].join('-')
+  end
+
   def fetch
-    response = Net::HTTP.get_response(URI(url))
-    FeedResponse.new(body: response.body)
+    body = Rails.cache.fetch(cache_key, expires_in: 10.minutes) {
+      Net::HTTP.get_response(URI(url)).body
+    }
+    FeedResponse.new(body: body)
   end
 end
