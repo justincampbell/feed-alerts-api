@@ -1,4 +1,8 @@
 class SMS
+  def self.normalize(number)
+    Phonelib.parse(number).e164
+  end
+
   def handle_message(from, body)
     user = User.find_by(sms_number: from)
 

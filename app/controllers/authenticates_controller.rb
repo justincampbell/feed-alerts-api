@@ -41,7 +41,6 @@ class AuthenticatesController < ApplicationController
   end
 
   def sms_number
-    raw = authentication_params[:sms_number]
-    Phonelib.parse(raw).sanitized
+    SMS.normalize(authentication_params[:sms_number])
   end
 end

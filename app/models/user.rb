@@ -6,7 +6,6 @@ class User < ApplicationRecord
     phone: { possible: true }
 
   def sms_number=(value)
-    phone = Phonelib.parse(value)
-    self[:sms_number] = phone.sanitized
+    self[:sms_number] = SMS.normalize(value)
   end
 end

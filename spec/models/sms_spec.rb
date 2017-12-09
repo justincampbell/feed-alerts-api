@@ -63,7 +63,7 @@ RSpec.describe SMS do
   describe "#send" do
     subject(:send) { sms.send to, body }
 
-    let(:to) { "1234567890" }
+    let(:to) { "2345678900" }
     let(:body) { "hello" }
 
     it "sends an SMS" do

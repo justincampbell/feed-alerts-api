@@ -7,8 +7,8 @@ RSpec.describe User do
 
   describe "#sms_number" do
     it "sanitizes the number" do
-      user.sms_number = "(123) 456-7890"
-      expect(user.sms_number).to eq("1234567890")
+      user.sms_number = "(234) 567-8900"
+      expect(user.sms_number).to eq("+12345678900")
     end
 
     context "when nil" do
