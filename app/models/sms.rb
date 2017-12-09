@@ -9,13 +9,11 @@ class SMS
     case body.downcase.strip
     when "ping"
       "pong"
-    when "stop"
-      if user.subscriptions.any?
-        user.subscriptions.destroy_all
-        "You have been unsubscribed."
-      else
-        "You are not currently subscribed to any feeds."
-      end
+    when "start"
+      "Welcome back! TODO go to URL to add a new subscription"
+    when "cancel", "stop"
+      user.subscriptions.destroy_all if user
+      nil
     when "subscriptions"
       if user.subscriptions.any?
         "You have #{user.subscriptions.count} subscription(s)."

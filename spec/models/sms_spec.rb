@@ -3,29 +3,26 @@ require 'rails_helper'
 RSpec.describe SMS do
   subject(:sms) { described_class.new }
 
+  describe ".normalize" do
+    it "normalizes a number" do
+      expect(SMS.normalize("2345678900")).to eq("+12345678900")
+      expect(SMS.normalize("(234) 567-8900")).to eq("+12345678900")
+      expect(SMS.normalize("+1 (234) 567-8900")).to eq("+12345678900")
+    end
+  end
+
   describe "#handle_message" do
     subject(:handle_message) { sms.handle_message(from, body) }
 
     let(:from) { user.sms_number }
     let(:user) { create(:user) }
 
-    context "help" do
-      let(:body) { "help" }
-
-      it "responds with help" do
-        reply = handle_message
-        expect(reply).to include("STOP to cancel all subscriptions")
-      end
-    end
-
-    context "stop" do
+    context "cancel, stop" do
       let(:body) { "stop" }
 
-      context "without subscriptions" do
-        it "replies with an error message" do
-          reply = handle_message
-          expect(reply).to eq("You are not currently subscribed to any feeds.")
-        end
+      it "does not respond" do
+        reply = handle_message
+        expect(reply).to eq(nil)
       end
 
       context "with subscriptions" do
@@ -33,8 +30,17 @@ RSpec.describe SMS do
 
         it "deletes all subscriptions for this user" do
           reply = handle_message
-          expect(reply).to eq("You have been unsubscribed.")
+          expect(reply).to eq(nil)
           expect(user.subscriptions.count).to eq(0)
+        end
+      end
+
+      context "without a matching user" do
+        let(:from) { Faker::PhoneNumber.cell_phone }
+
+        it "does not respond" do
+          reply = handle_message
+          expect(reply).to eq(nil)
         end
       end
     end

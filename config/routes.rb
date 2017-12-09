@@ -8,4 +8,8 @@ Rails.application.routes.draw do
   end
 
   resources :subscriptions, only: %i[create]
+
+  namespace :webhooks do
+    post :twilio
+  end
 end
