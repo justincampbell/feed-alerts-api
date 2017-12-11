@@ -97,4 +97,49 @@ RSpec.describe SubscriptionsController do
       end
     end
   end
+
+  describe "#preview" do
+    let(:feed) { create(:feed) }
+
+    let(:params) {
+      {
+        _jsonapi: {
+          data: {
+            type: "subscriptions",
+            attributes: {
+              include_title: include_title,
+              shorten_common_terms: shorten_common_terms
+            },
+            relationships: {
+              feed: { data: { type: "feeds", id: feed.id.to_s } }
+            }
+          }
+        }
+      }
+    }
+
+    let(:include_title) { true }
+    let(:shorten_common_terms) { false }
+
+    let(:feed_response) { double(FeedResponse, most_recent_item: feed_item) }
+    let(:feed_item) { double(FeedItem, title: "title", text: "text") }
+
+    before do
+      allow_any_instance_of(Feed)
+        .to receive(:fetch)
+        .and_return(feed_response)
+    end
+
+    it "generates a preview and returns it with the given options" do
+      post "/preview", headers: headers, params: params
+
+      expect(parsed_response).to include_json(
+        data: {
+          attributes: {
+            text: "title\ntext"
+          }
+        }
+      )
+    end
+  end
 end

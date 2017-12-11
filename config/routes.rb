@@ -3,11 +3,10 @@ Rails.application.routes.draw do
     post 'request-code'
   end
 
-  resources :feeds, only: %i[index] do
-    get :preview
-  end
+  resources :feeds, only: %i[index]
 
   resources :subscriptions, only: %i[create]
+  post :preview, to: "subscriptions#preview"
 
   namespace :webhooks do
     post :twilio

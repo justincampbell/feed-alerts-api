@@ -4,4 +4,8 @@ class Subscription < ApplicationRecord
 
   validates :feed,
     uniqueness: { scope: :user, message: "already subscribed to" }
+
+  def preview
+    Preview.new(feed.fetch, subscription: self)
+  end
 end

@@ -50,33 +50,4 @@ RSpec.describe FeedsController do
       end
     end
   end
-
-  describe "#preview" do
-    let(:feed) { create(:feed) }
-    let(:params) { }
-
-    let(:feed_response) {
-      double(FeedResponse, items: feed_item, most_recent_item: feed_item)
-    }
-    let(:feed_item) {
-      double(FeedItem, text: "lol")
-    }
-
-    before do
-      allow_any_instance_of(Feed)
-        .to receive(:fetch)
-        .and_return(feed_response)
-    end
-
-    it "fetches a preview and returns it with the given options" do
-      get "/feeds/#{feed.id}/preview"
-      expect(parsed_response).to include_json(
-        data: {
-          attributes: {
-            text: "lol"
-          }
-        }
-      )
-    end
-  end
 end

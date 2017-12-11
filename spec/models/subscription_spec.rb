@@ -31,4 +31,18 @@ RSpec.describe Subscription do
       expect(shorten_common_terms).to eq(false)
     end
   end
+
+  describe "#preview" do
+    subject(:preview) { subscription.preview }
+
+    let(:feed) { subscription.feed }
+    let(:feed_response) { double(FeedResponse) }
+
+    before { allow(feed).to receive(:fetch).and_return(feed_response) }
+
+    it "returns a preview object with self passed in" do
+      expect(preview).to be_a(Preview)
+      expect(preview.subscription).to eq(subscription)
+    end
+  end
 end

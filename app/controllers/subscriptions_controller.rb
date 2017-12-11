@@ -18,6 +18,11 @@ class SubscriptionsController < ApplicationController
     end
   end
 
+  def preview
+    subscription = Subscription.new(create_params)
+    render jsonapi: subscription.preview
+  end
+
   private
 
   def create_params
