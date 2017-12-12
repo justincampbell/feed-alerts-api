@@ -2,11 +2,22 @@ require 'rails_helper'
 
 RSpec.describe Preview do
   subject(:preview) {
-    described_class.new(feed_response, subscription: subscription)
+    described_class.new(
+      feed_response,
+      subscription: subscription,
+      replacer: replacer
+    )
   }
 
   let(:feed_response) { double(FeedResponse, most_recent_item: feed_item) }
   let(:subscription) { build(:subscription) }
+  let(:replacer) {
+    Class.new {
+      def replace(text)
+        text.gsub(/item/i, "I")
+      end
+    }.new
+  }
 
   let(:feed_item) { double(FeedItem, title: "item title", text: "item text") }
 
@@ -41,6 +52,19 @@ RSpec.describe Preview do
             item text
           TEXT
         )
+      end
+
+      context "when the subscription shortens common terms" do
+        before { subscription.shorten_common_terms = true }
+
+        it "prepends the title" do
+          expect(text).to eq(
+            <<~TEXT.strip
+              I title
+              I text
+            TEXT
+          )
+        end
       end
     end
   end

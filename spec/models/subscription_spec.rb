@@ -40,9 +40,10 @@ RSpec.describe Subscription do
 
     before { allow(feed).to receive(:fetch).and_return(feed_response) }
 
-    it "returns a preview object with self passed in" do
+    it "returns a preview object" do
       expect(preview).to be_a(Preview)
       expect(preview.subscription).to eq(subscription)
+      expect(preview.replacer).to be_a(Replacer)
     end
   end
 end

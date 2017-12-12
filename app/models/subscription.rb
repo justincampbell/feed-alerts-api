@@ -6,6 +6,10 @@ class Subscription < ApplicationRecord
     uniqueness: { scope: :user, message: "already subscribed to" }
 
   def preview
-    Preview.new(feed.fetch, subscription: self)
+    Preview.new(feed.fetch, subscription: self, replacer: replacer)
+  end
+
+  def replacer
+    Replacer.new
   end
 end
