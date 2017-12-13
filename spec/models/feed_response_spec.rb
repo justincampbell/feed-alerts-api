@@ -1,9 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe FeedResponse do
-  subject(:feed_response) { described_class.new(body: body) }
+  subject(:feed_response) { described_class.new(url: url, body: body) }
 
+  let(:url) { "http://crossfitwc.com/category/wod/feed/" }
   let(:body) { File.read("spec/fixtures/feed_response.xml") }
+
+  describe "#url" do
+    subject { feed_response.url }
+    it { is_expected.to eq(url) }
+  end
 
   describe "#title" do
     subject(:title) { feed_response.title }

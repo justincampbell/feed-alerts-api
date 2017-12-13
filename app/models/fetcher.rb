@@ -15,6 +15,6 @@ class Fetcher
     body = Rails.cache.fetch(cache_key, expires_in: 10.minutes) {
       Net::HTTP.get_response(URI(url)).body
     }
-    FeedResponse.new(body: body)
+    FeedResponse.new(body: body, url: url)
   end
 end

@@ -1,7 +1,9 @@
 class FeedResponse
+  attr_reader :url
   attr_reader :body
 
-  def initialize(body: )
+  def initialize(url: , body: )
+    @url = url
     @body = body
   end
 
