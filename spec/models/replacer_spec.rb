@@ -63,3 +63,11 @@ MU
   muscle-up
   muscle-ups
   muscleup
+
+DU
+  Double Under
+  double-unders
+
+PU
+  Pull Up
+  pull-ups
