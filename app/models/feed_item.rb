@@ -1,19 +1,21 @@
-class FeedItem
-  attr_reader :entry
+class FeedItem < ApplicationRecord
+  belongs_to :feed
 
-  def initialize(entry)
-    @entry = entry
-  end
+  validates_uniqueness_of :guid,
+    scope: :feed
 
-  def id
-    entry.id
-  end
+  default_scope { order(published_at: :desc) }
 
-  def title
-    entry.title
+  def self.from_feedjira_entry(entry, feed: nil)
+    new(
+      feed: feed,
+      guid: entry.id,
+      title: entry.title,
+      content: entry.content
+    )
   end
 
   def text
-    @text ||= Cleaner.clean(entry.content)
+    @text ||= Cleaner.clean(content)
   end
 end

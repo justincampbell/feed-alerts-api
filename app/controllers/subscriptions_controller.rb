@@ -20,7 +20,14 @@ class SubscriptionsController < ApplicationController
 
   def preview
     subscription = Subscription.new(create_params)
-    render jsonapi: subscription.preview
+    feed = subscription.feed
+    item = feed.most_recent_item
+
+    if item
+      render jsonapi: subscription.preview(item)
+    else
+      render_jsonapi_error 404, "Not found"
+    end
   end
 
   private

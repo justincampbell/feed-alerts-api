@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe FeedItem do
-  subject(:feed_item) { described_class.new(entry) }
+  subject(:feed_item) { create(:feed_item) }
 
   let(:entry) {
     body = File.read("spec/fixtures/feed_response.xml")
@@ -9,23 +9,35 @@ RSpec.describe FeedItem do
     rss.entries.first
   }
 
-  %w[
-    id
-    title
-  ].each do |method_name|
-    describe "##{method_name}" do
-      it "delegates to the entry" do
-        expect(feed_item.public_send(method_name))
-          .to eq(entry.public_send(method_name))
-      end
+  it "defaults to showing the newest items first" do
+    create(:feed_item, published_at: 2.minutes.ago)
+    newer = create(:feed_item, published_at: 1.minute.ago)
+
+    expect(FeedItem.first).to eq(newer)
+  end
+
+  describe ".from_feedjira_entry" do
+    subject(:feed_item) {
+      described_class.from_feedjira_entry(entry, feed: feed)
+    }
+
+    let(:feed) { build(:feed) }
+
+    it "sets required attributes" do
+      expect(feed_item.feed).to eq(feed)
+      expect(feed_item.guid).to eq(entry.id)
+      expect(feed_item.title).to eq(entry.title)
+      expect(feed_item.content).to eq(entry.content)
     end
   end
 
   describe "#text" do
-    subject(:text) { feed_item.text }
+    before do
+      feed_item.content = entry.content
+    end
 
     it "cleans and returns the entry content" do
-      expect(text).to eq(
+      expect(feed_item.text).to eq(
         <<~TEXT
           Back Squat
           1-1-1-1-1

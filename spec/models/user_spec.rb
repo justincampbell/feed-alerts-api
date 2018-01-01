@@ -34,4 +34,18 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "#deliver_message" do
+    subject(:deliver_message) { user.deliver_message(body) }
+
+    let(:body) { "hello" }
+
+    it "sends an SMS" do
+      expect_any_instance_of(SMS)
+        .to receive(:send)
+        .with(user.sms_number, body)
+
+      deliver_message
+    end
+  end
 end

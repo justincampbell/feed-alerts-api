@@ -1,25 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Preview do
-  subject(:preview) {
-    described_class.new(
-      feed_response,
-      subscription: subscription,
-      replacer: replacer
-    )
-  }
+  subject(:preview) { described_class.new(text) }
 
-  let(:feed_response) { double(FeedResponse, most_recent_item: feed_item) }
-  let(:subscription) { build(:subscription) }
-  let(:replacer) {
-    Class.new {
-      def replace(text)
-        text.gsub(/item/i, "I")
-      end
-    }.new
-  }
-
-  let(:feed_item) { double(FeedItem, title: "item title", text: "item text") }
+  let(:text) { "text" }
 
   describe "#id" do
     it "is a UUID" do
@@ -36,36 +20,7 @@ RSpec.describe Preview do
   end
 
   describe "#text" do
-    subject(:text) { preview.text }
-
-    it "returns the most recent item's text" do
-      expect(text).to eq("item text")
-    end
-
-    context "when the subscription includes the title" do
-      before { subscription.include_title = true }
-
-      it "prepends the title" do
-        expect(text).to eq(
-          <<~TEXT.strip
-            item title
-            item text
-          TEXT
-        )
-      end
-
-      context "when the subscription shortens common terms" do
-        before { subscription.shorten_common_terms = true }
-
-        it "prepends the title" do
-          expect(text).to eq(
-            <<~TEXT.strip
-              I title
-              I text
-            TEXT
-          )
-        end
-      end
-    end
+    subject { preview.text }
+    it { is_expected.to eq(text) }
   end
 end

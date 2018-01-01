@@ -10,11 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171212222332) do
+ActiveRecord::Schema.define(version: 20171213015330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "citext"
+
+  create_table "feed_items", force: :cascade do |t|
+    t.bigint "feed_id", null: false
+    t.string "guid", null: false
+    t.string "title"
+    t.string "link"
+    t.string "author"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "published_at"
+    t.index ["feed_id", "guid"], name: "index_feed_items_on_feed_id_and_guid", unique: true
+    t.index ["feed_id"], name: "index_feed_items_on_feed_id"
+    t.index ["guid"], name: "index_feed_items_on_guid"
+  end
 
   create_table "feeds", force: :cascade do |t|
     t.string "url", null: false
@@ -50,6 +65,7 @@ ActiveRecord::Schema.define(version: 20171212222332) do
     t.boolean "shorten_common_terms", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "last_sent_item_id"
     t.index ["feed_id"], name: "index_subscriptions_on_feed_id"
     t.index ["user_id", "feed_id"], name: "index_subscriptions_on_user_id_and_feed_id", unique: true
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
@@ -68,6 +84,7 @@ ActiveRecord::Schema.define(version: 20171212222332) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "feed_items", "feeds"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "feeds"
   add_foreign_key "subscriptions", "users"

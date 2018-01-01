@@ -1,9 +1,9 @@
-require 'net/http'
-
 class Fetcher
+  attr_reader :feed
   attr_reader :url
 
-  def initialize(url: )
+  def initialize(feed: nil, url: )
+    @feed = feed
     @url = url
   end
 
@@ -15,6 +15,7 @@ class Fetcher
     body = Rails.cache.fetch(cache_key, expires_in: 10.minutes) {
       Net::HTTP.get_response(URI(url)).body
     }
-    FeedResponse.new(body: body, url: url)
+
+    FeedResponse.new(body: body, feed: feed, url: url)
   end
 end

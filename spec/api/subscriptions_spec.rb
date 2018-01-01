@@ -121,25 +121,38 @@ RSpec.describe SubscriptionsController do
     let(:include_title) { true }
     let(:shorten_common_terms) { false }
 
-    let(:feed_response) { double(FeedResponse, most_recent_item: feed_item) }
-    let(:feed_item) { double(FeedItem, title: "title", text: "text") }
+    let(:feed) { create(:feed) }
 
-    before do
-      allow_any_instance_of(Feed)
-        .to receive(:fetch)
-        .and_return(feed_response)
+    context "with feed items" do
+      before do
+        create :item,
+          feed: feed,
+          title: "title",
+          content: "<p>text</p>"
+      end
+
+      it "generates a preview and returns it with the given options" do
+        post "/preview", headers: headers, params: params
+
+        expect(parsed_response).to include_json(
+          data: {
+            attributes: {
+              text: "title\ntext"
+            }
+          }
+        )
+      end
     end
 
-    it "generates a preview and returns it with the given options" do
-      post "/preview", headers: headers, params: params
+    context "without feed items" do
+      it "returns not found" do
+        post "/preview", headers: headers, params: params
 
-      expect(parsed_response).to include_json(
-        data: {
-          attributes: {
-            text: "title\ntext"
-          }
-        }
-      )
+        expect(response.status).to eq(404)
+        expect(parsed_response).to include_json(
+          errors: [{ detail: "Not found" }]
+        )
+      end
     end
   end
 end

@@ -1,30 +1,35 @@
 class FeedResponse
-  attr_reader :url
   attr_reader :body
+  attr_reader :feed
+  attr_reader :url
 
-  def initialize(url: , body: )
-    @url = url
+  # TODO: Can url be removed? It doesn't seem to be used.
+  def initialize(body: , feed: nil, url: )
     @body = body
+    @feed = feed
+    @url = url
   end
 
   def title
     rss.title
   end
 
-  def most_recent_item_id
-    most_recent_item.id
+  def most_recent_item_guid
+    most_recent_item.guid
   end
 
   def most_recent_item
-    items.first
+    @most_recent_item ||= items.first
   end
 
-  def items_since(item_id)
-    items.take_while { |item| item.id != item_id }
+  def items_since(item_guid)
+    items.take_while { |item| item.guid != item_guid }
   end
 
   def items
-    rss.entries.map { |entry| FeedItem.new(entry) }
+    @items ||= rss.entries.map { |entry|
+      FeedItem.from_feedjira_entry(entry, feed: feed)
+    }
   end
 
   private

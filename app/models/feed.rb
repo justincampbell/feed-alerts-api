@@ -1,4 +1,11 @@
 class Feed < ApplicationRecord
+  has_many :items,
+    class_name: "FeedItem",
+    dependent: :destroy
+
+  has_many :subscriptions,
+    dependent: :destroy
+
   validates :name,
     presence: true
 
@@ -11,6 +18,20 @@ class Feed < ApplicationRecord
   end
 
   def fetcher
-    @fetcher ||= Fetcher.new(url: url)
+    @fetcher ||= Fetcher.new(feed: self, url: url)
+  end
+
+  def most_recent_item
+    items.first
+  end
+
+  def items_since(item)
+    items.where("published_at > ?", item.published_at)
+  end
+
+  def notify_subscriptions_of_updates
+    subscriptions.each do |subscription|
+      FeedUpdatedJob.perform_later subscription.id
+    end
   end
 end

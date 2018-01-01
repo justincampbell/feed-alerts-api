@@ -8,4 +8,8 @@ class User < ApplicationRecord
   def sms_number=(value)
     self[:sms_number] = SMS.normalize(value)
   end
+
+  def deliver_message(body)
+    SMS.new.send sms_number, body
+  end
 end
