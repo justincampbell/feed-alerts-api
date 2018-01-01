@@ -8,7 +8,7 @@ class CreateFeedItems < ActiveRecord::Migration[5.1]
       t.string :author
       t.text :content
       t.timestamps
-      t.string :published_at
+      t.datetime :published_at
     end
 
     add_index :feed_items, [:feed_id, :guid], unique: true

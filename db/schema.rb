@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20171213015330) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "published_at"
+    t.datetime "published_at"
     t.index ["feed_id", "guid"], name: "index_feed_items_on_feed_id_and_guid", unique: true
     t.index ["feed_id"], name: "index_feed_items_on_feed_id"
     t.index ["guid"], name: "index_feed_items_on_guid"

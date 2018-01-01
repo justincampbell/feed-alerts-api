@@ -11,7 +11,8 @@ class FeedItem < ApplicationRecord
       feed: feed,
       guid: entry.id,
       title: entry.title,
-      content: entry.content
+      content: entry.content,
+      published_at: entry.published
     )
   end
 
