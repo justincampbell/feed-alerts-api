@@ -38,5 +38,8 @@ module FeedAlertsApi
           methods: %i[get post put patch delete options head]
       end
     end
+
+    config.lograge.enabled = true
+    config.lograge.base_controller_class = 'ActionController::API'
   end
 end
