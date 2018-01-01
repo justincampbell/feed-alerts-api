@@ -68,7 +68,7 @@ RSpec.describe SMS do
 
         it "replies with the subscription count" do
           reply = handle_message
-          expect(reply).to eq("You have 2 subscription(s).")
+          expect(reply.lines.first.strip).to eq("You have 2 subscriptions:")
         end
       end
     end

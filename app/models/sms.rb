@@ -1,4 +1,6 @@
 class SMS
+  include ActionView::Helpers::TextHelper
+
   def self.normalize(number)
     result = Phonelib.parse(number).e164
 
@@ -26,7 +28,8 @@ class SMS
       nil
     when "subscriptions"
       if user.subscriptions.any?
-        "You have #{user.subscriptions.count} subscription(s)."
+        "You have #{pluralize(user.subscriptions.count, "subscription")}:\n" +
+          user.subscriptions.map(&:feed).map(&:name).join("\n")
       else
         "You are not currently subscribed to any feeds."
       end
