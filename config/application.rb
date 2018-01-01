@@ -39,7 +39,10 @@ module FeedAlertsApi
       end
     end
 
+    config.active_job.queue_adapter = :que
+
     config.lograge.enabled = true
     config.lograge.base_controller_class = 'ActionController::API'
+    Que.log_formatter = Lograge.formatter
   end
 end
