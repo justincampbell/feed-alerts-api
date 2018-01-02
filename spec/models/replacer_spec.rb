@@ -72,3 +72,7 @@ DU
 PU
   Pull Up
   pull-ups
+
+BS
+  Back Squat
+  backsquat

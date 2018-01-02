@@ -14,5 +14,6 @@ class Replacer
     ['MU', /muscle[\s-]?ups?/i],
     ['DU', /double[\s-]?unders?/i],
     ['PU', /pull[\s-]?ups?/i],
+    ['BS', /back[\s-]?squats?/i],
   ]
 end
