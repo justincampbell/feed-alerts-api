@@ -13,6 +13,7 @@ gem 'phonelib', '~> 0.6'
 gem 'puma', '~> 3.7'
 gem 'que', '~> 0.14'
 gem 'rack-cors', '~> 1.0'
+gem 'sentry-raven', '~> 2.7.1'
 gem 'twilio-ruby', '~> 5.5'
 gem 'validate_url', '~> 1.0'
 
