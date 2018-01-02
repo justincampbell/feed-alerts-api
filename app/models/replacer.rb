@@ -8,7 +8,7 @@ class Replacer
 
   REPLACEMENTS = [
     ['DL', /dead(lifts|s|lift)/i],
-    ['\1RM', /(\d*) rep max/i],
+    ['\1RM', /(\d*) (rep max|rm)/i],
     ['\1in', /(m)inutes?/i],
     ['\1min', /(\d+)[\s-]*min/i],
     ['MU', /muscle[\s-]?ups?/i],

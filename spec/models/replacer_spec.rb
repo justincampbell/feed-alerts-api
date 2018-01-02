@@ -40,6 +40,7 @@ DL
 3RM
   3 rep max
   3 Rep Max
+  3 RM
 
 10RM
   10 rep max
