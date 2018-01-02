@@ -137,7 +137,7 @@ RSpec.describe SubscriptionsController do
         expect(parsed_response).to include_json(
           data: {
             attributes: {
-              text: "title\ntext"
+              text: "title\n\ntext"
             }
           }
         )

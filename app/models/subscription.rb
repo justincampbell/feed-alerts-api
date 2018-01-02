@@ -29,15 +29,16 @@ class Subscription < ApplicationRecord
   end
 
   def render_item(item)
-    parts = []
+    lines = []
 
     if include_title?
-      parts << item.title
+      lines << item.title
+      lines << ""
     end
 
-    parts << item.text
+    lines << item.text
 
-    text = parts.compact.join("\n")
+    text = lines.compact.join("\n")
 
     if shorten_common_terms?
       text = replacer.replace(text)

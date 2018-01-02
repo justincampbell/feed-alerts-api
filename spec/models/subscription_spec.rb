@@ -99,6 +99,7 @@ RSpec.describe Subscription do
           expect(user).to receive(:deliver_message).with(
             <<~BODY.strip
               hi everyone
+
               hi
             BODY
           )
@@ -160,6 +161,7 @@ RSpec.describe Subscription do
         expect(render_item).to eq(
           <<~TEXT.strip
             Hello Everyone!
+
             hello
           TEXT
         )
@@ -174,6 +176,7 @@ RSpec.describe Subscription do
         expect(render_item).to eq(
           <<~TEXT.strip
             Hi Everyone!
+
             hi
           TEXT
         )
