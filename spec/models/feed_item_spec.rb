@@ -29,6 +29,7 @@ RSpec.describe FeedItem do
       expect(feed_item.title).to eq(entry.title)
       expect(feed_item.content).to eq(entry.content)
       expect(feed_item.published_at).to eq(entry.published)
+      expect(feed_item.link).to eq(entry.url)
     end
   end
 
