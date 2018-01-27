@@ -37,8 +37,9 @@ class Subscription < ApplicationRecord
 
     if include_title?
       lines << shorten(item.title)
-      lines << ""
     end
+
+    lines << ""
 
     lines << shorten(item.text)
 

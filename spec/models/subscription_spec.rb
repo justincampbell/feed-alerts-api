@@ -157,6 +157,20 @@ RSpec.describe Subscription do
       )
     end
 
+    context "with include_feed_name" do
+      before { subscription.include_feed_name = true }
+
+      it "includes the feed name" do
+        expect(render_item).to eq(
+          <<~TEXT.strip
+            Greetings Inc.
+
+            hello
+          TEXT
+        )
+      end
+    end
+
     context "with include_title" do
       before { subscription.include_title = true }
 
