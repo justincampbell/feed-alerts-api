@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171213015330) do
+ActiveRecord::Schema.define(version: 20180127151004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,11 +61,13 @@ ActiveRecord::Schema.define(version: 20171213015330) do
   create_table "subscriptions", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "feed_id"
-    t.boolean "include_title", default: false, null: false
+    t.boolean "include_title", default: true, null: false
     t.boolean "shorten_common_terms", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "last_sent_item_id"
+    t.boolean "include_feed_name", default: false, null: false
+    t.boolean "include_link", default: true, null: false
     t.index ["feed_id"], name: "index_subscriptions_on_feed_id"
     t.index ["user_id", "feed_id"], name: "index_subscriptions_on_user_id_and_feed_id", unique: true
     t.index ["user_id"], name: "index_subscriptions_on_user_id"

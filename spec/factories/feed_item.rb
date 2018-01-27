@@ -4,5 +4,6 @@ FactoryBot.define do
     guid { SecureRandom.uuid }
     title { Faker::Lorem.sentence }
     content { Faker::Lorem.paragraph }
+    link { Faker::Internet.url }
   end
 end

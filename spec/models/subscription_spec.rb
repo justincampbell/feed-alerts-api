@@ -1,7 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe Subscription do
-  subject(:subscription) { build(:subscription) }
+  subject(:subscription) {
+    build(
+      :subscription,
+      include_feed_name: false,
+      include_title: false,
+      include_link: false,
+      shorten_common_terms: false
+    )
+  }
 
   let(:feed) { subscription.feed }
   let(:user) { subscription.user }
@@ -29,20 +37,13 @@ RSpec.describe Subscription do
       .to include("already subscribed to")
   end
 
-  describe "#include_title" do
-    subject(:include_title) { subscription.include_title }
+  it "has sensible defaults" do
+    subscription = build(:subscription)
 
-    it "defaults to false" do
-      expect(include_title).to eq(false)
-    end
-  end
-
-  describe "#shorten_common_terms" do
-    subject(:shorten_common_terms) { subscription.shorten_common_terms }
-
-    it "defaults to false" do
-      expect(shorten_common_terms).to eq(false)
-    end
+    expect(subscription.include_feed_name).to eq(false)
+    expect(subscription.include_title).to eq(true)
+    expect(subscription.include_link).to eq(true)
+    expect(subscription.shorten_common_terms).to eq(false)
   end
 
   describe "#preview" do
@@ -141,8 +142,10 @@ RSpec.describe Subscription do
   describe "#render_item" do
     subject(:render_item) { subscription.render_item(item) }
 
-    let(:item) { build(:item, title: title, content: content) }
+    let(:feed) { build(:feed, name: feed_name) }
+    let(:item) { build(:item, feed: feed, title: title, content: content) }
 
+    let(:feed_name) { "Greetings Inc." }
     let(:title) { "Hello Everyone!" }
     let(:content) { "<p>hello</p>" }
 
@@ -167,21 +170,50 @@ RSpec.describe Subscription do
         )
       end
 
-    context "with shorten_common_terms" do
-      before do
-        subscription.shorten_common_terms = true
+      context "with include_feed_name" do
+        before { subscription.include_feed_name = true }
+
+        it "includes the feed name" do
+          expect(render_item).to eq(
+            <<~TEXT.strip
+              Greetings Inc.
+              Hello Everyone!
+
+              hello
+            TEXT
+          )
+        end
       end
 
-      it "shortens the text according to the replacer" do
-        expect(render_item).to eq(
-          <<~TEXT.strip
+      context "with shorten_common_terms" do
+        before do
+          subscription.shorten_common_terms = true
+        end
+
+        it "shortens the text according to the replacer" do
+          expect(render_item).to eq(
+            <<~TEXT.strip
             Hi Everyone!
 
             hi
+            TEXT
+          )
+        end
+      end
+    end
+
+    context "with include_link" do
+      before { subscription.include_link = true }
+
+      it "includes the item link" do
+        expect(render_item).to eq(
+          <<~TEXT.strip
+            hello
+
+            #{item.link}
           TEXT
         )
       end
-    end
     end
   end
 end

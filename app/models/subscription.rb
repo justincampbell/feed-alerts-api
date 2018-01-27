@@ -31,19 +31,29 @@ class Subscription < ApplicationRecord
   def render_item(item)
     lines = []
 
+    if include_feed_name?
+      lines << item.feed.name
+    end
+
     if include_title?
-      lines << item.title
+      lines << shorten(item.title)
       lines << ""
     end
 
-    lines << item.text
+    lines << shorten(item.text)
+
+    if include_link?
+      lines << ""
+      lines << item.link
+    end
 
     text = lines.compact.join("\n")
 
-    if shorten_common_terms?
-      text = replacer.replace(text)
-    end
+    text.gsub(/\n\n+/, "\n\n").strip
+  end
 
-    text.strip
+  def shorten(text)
+    return text unless shorten_common_terms?
+    replacer.replace(text)
   end
 end
