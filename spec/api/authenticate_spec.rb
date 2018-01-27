@@ -61,10 +61,9 @@ RSpec.describe AuthenticatesController do
 
   describe "#request_code" do
     let(:sms_number) { Faker::PhoneNumber.cell_phone }
+    let(:normalized) { SMS.normalize(sms_number) }
 
     it "generates a code, stores it, and sends it to the number" do
-      normalized = SMS.normalize(sms_number)
-
       expect_any_instance_of(SMS)
         .to receive(:send)
         .with(normalized, anything)
@@ -76,6 +75,26 @@ RSpec.describe AuthenticatesController do
       expect(response.status).to eq(202)
 
       expect(VerificationCode.where(destination: normalized).count).to eq(1)
+    end
+
+    context "with an invalid phone number" do
+      let(:sms_number) { "abc123" }
+
+      it "responds with an error" do
+        expect_any_instance_of(SMS)
+          .to_not receive(:send)
+
+        post "/authenticate/request-code", params: {
+          sms_number: sms_number
+        }
+
+        expect(response.status).to eq(403)
+        expect(parsed_response).to include_json(
+          errors: [{ detail: "Invalid SMS number" }]
+        )
+
+        expect(VerificationCode.where(destination: normalized).count).to eq(0)
+      end
     end
   end
 
@@ -138,7 +157,7 @@ RSpec.describe AuthenticatesController do
     context "when the verification code does not match" do
       let(:verification_code) { "xxxx" }
 
-      it "creates a user and returns a new session" do
+      it "responds with an error" do
         post "/authenticate", params: {
           sms_number: sms_number,
           verification_code: verification_code

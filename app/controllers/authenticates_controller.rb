@@ -13,8 +13,21 @@ class AuthenticatesController < ApplicationController
   end
 
   def request_code
+    user = User.new(sms_number: sms_number)
+    unless user.valid?
+      render_jsonapi_error 403, "Invalid SMS number"
+      return
+    end
+
     code = VerificationCode.store(sms_number)
     text = "#{code} is your verification code"
+
+    if Rails.env.development?
+      Rails.logger.info text
+      head :accepted
+      return
+    end
+
     SMS.new.send sms_number, text
     head :accepted
   end
