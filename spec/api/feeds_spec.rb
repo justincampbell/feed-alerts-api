@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe FeedsController do
-  describe "#index" do
+  describe "GET index" do
     before do
       create :feed, name: "Foo"
       create :feed, name: "Bar"
@@ -47,6 +47,137 @@ RSpec.describe FeedsController do
             ]
           )
         end
+      end
+    end
+  end
+
+  describe "POST create" do
+    let(:user) { create(:user) }
+
+    let(:kind) { "rss" }
+    let(:url) { "http://example.com/feed.xml" }
+    let(:name) { "Feed Name" }
+    let(:token) { user.sessions.create.token }
+
+    let(:headers) {
+      { "Authorization" => "Bearer #{token}" }
+    }
+
+    let(:feed_response) {
+      double(FeedResponse, title: name)
+    }
+
+    before do
+      allow_any_instance_of(Fetcher)
+        .to receive(:fetch)
+        .and_return(feed_response)
+    end
+
+    it "creates a feed created by this user and queues a job" do
+      expect(FeedCheckJob).to receive(:perform_later)
+
+      post "/feeds", headers: headers, params: {
+        _jsonapi: {
+          data: {
+            type: "feeds",
+            attributes: {
+              kind: kind,
+              url: url
+            }
+          }
+        }
+      }
+
+      expect(response.status).to eq(201)
+
+      feed = Feed.first
+      expect(feed.created_by).to eq(user)
+
+      expect(parsed_response).to include_json(
+        data: {
+          id: feed.id.to_s,
+          type: "feeds",
+          attributes: {
+            kind: kind,
+            url: url,
+            name: name
+          }
+        }
+      )
+    end
+
+    context "without an auth header" do
+      it "returns forbidden" do
+        post "/feeds", params: {
+          _jsonapi: {
+            data: {
+              type: "feeds",
+              attributes: {
+                kind: kind,
+                url: url
+              }
+            }
+          }
+        }
+
+        expect(response.status).to eq(403)
+        expect(parsed_response).to include_json(
+          errors: [{ detail: "Forbidden" }]
+        )
+      end
+    end
+
+    context "with an invalid feed for the given kind" do
+      before do
+        allow_any_instance_of(Feed)
+          .to receive(:fetch)
+          .and_raise(Feedjira::NoParserAvailable)
+      end
+
+      it "returns a JSON error" do
+        post "/feeds", headers: headers, params: {
+          _jsonapi: {
+            data: {
+              type: "feeds",
+              attributes: {
+                kind: kind,
+                url: url
+              }
+            }
+          }
+        }
+
+        expect(response.status).to eq(422)
+        expect(parsed_response).to include_json(
+          errors: [{ detail: "Not a valid XML feed" }]
+        )
+      end
+    end
+
+    context "with an invalid URL" do
+      before do
+        allow_any_instance_of(Feed)
+          .to receive(:fetch)
+          .and_raise(Errno::ECONNREFUSED)
+      end
+
+      it "returns a JSON error" do
+        post "/feeds", headers: headers, params: {
+          _jsonapi: {
+            data: {
+              type: "feeds",
+              attributes: {
+                kind: kind,
+                url: "foo"
+              }
+            }
+          }
+        }
+
+        expect(response.status).to eq(422)
+        expect(parsed_response).to include_json(
+          errors: [{ detail: "Not a valid URL" }]
+        )
       end
     end
   end

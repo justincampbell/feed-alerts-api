@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180127151004) do
+ActiveRecord::Schema.define(version: 20180204155930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,9 @@ ActiveRecord::Schema.define(version: 20180127151004) do
     t.citext "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "kind"
+    t.bigint "created_by_id"
+    t.index ["created_by_id"], name: "index_feeds_on_created_by_id"
   end
 
   create_table "que_jobs", primary_key: ["queue", "priority", "run_at", "job_id"], force: :cascade, comment: "3" do |t|
@@ -87,6 +90,7 @@ ActiveRecord::Schema.define(version: 20180127151004) do
   end
 
   add_foreign_key "feed_items", "feeds"
+  add_foreign_key "feeds", "users", column: "created_by_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "feeds"
   add_foreign_key "subscriptions", "users"

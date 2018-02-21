@@ -41,12 +41,4 @@ class SubscriptionsController < ApplicationController
       :shorten_common_terms
     )
   end
-
-  def jsonapi_params
-    ActionController::Parameters.new(
-      ActiveModelSerializers::Deserialization.jsonapi_parse!(
-        params[:_jsonapi]
-      )
-    )
-  end
 end

@@ -12,6 +12,15 @@ RSpec.describe Feed do
     expect(feed).to_not be_valid
   end
 
+  it "validates kind" do
+    feed.kind = nil
+    expect(feed).to be_valid
+    feed.kind = "rss"
+    expect(feed).to be_valid
+    feed.kind = "foobar"
+    expect(feed).to_not be_valid
+  end
+
   describe "#url" do
     context "when nil" do
       before { feed.url = nil }

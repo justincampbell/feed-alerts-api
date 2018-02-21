@@ -1,4 +1,8 @@
 class Feed < ApplicationRecord
+  belongs_to :created_by,
+    class_name: "User",
+    required: false
+
   has_many :items,
     class_name: "FeedItem",
     dependent: :destroy

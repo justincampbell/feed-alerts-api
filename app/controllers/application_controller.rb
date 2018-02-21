@@ -55,4 +55,12 @@ class ApplicationController < ActionController::API
       url: request.url
     )
   end
+
+  def jsonapi_params
+    ActionController::Parameters.new(
+      ActiveModelSerializers::Deserialization.jsonapi_parse!(
+        params[:_jsonapi]
+      )
+    )
+  end
 end

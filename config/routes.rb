@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     post 'request-code'
   end
 
-  resources :feeds, only: %i[index]
+  resources :feeds, only: %i[index create]
 
   resources :subscriptions, only: %i[create]
   post :preview, to: "subscriptions#preview"
