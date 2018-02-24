@@ -35,6 +35,7 @@ class SubscriptionsController < ApplicationController
   def create_params
     jsonapi_params.permit(
       :feed_id,
+      :character_limit,
       :include_feed_name,
       :include_title,
       :include_link,

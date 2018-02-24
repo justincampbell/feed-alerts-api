@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180224145316) do
+ActiveRecord::Schema.define(version: 20180224150707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20180224145316) do
     t.string "last_sent_item_id"
     t.boolean "include_feed_name", default: false, null: false
     t.boolean "include_link", default: true, null: false
+    t.integer "character_limit", default: 1600, null: false
     t.index ["feed_id"], name: "index_subscriptions_on_feed_id"
     t.index ["user_id", "feed_id"], name: "index_subscriptions_on_user_id_and_feed_id", unique: true
     t.index ["user_id"], name: "index_subscriptions_on_user_id"

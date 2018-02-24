@@ -197,6 +197,21 @@ RSpec.describe Subscription do
             TEXT
           )
         end
+
+        context "with character_limit" do
+          before { subscription.character_limit = 36 }
+
+          it "shortens the message body" do
+            expect(render_item).to eq(
+              <<~TEXT.strip
+                Greetings Inc.
+                Hello Everyone!
+
+                hell
+              TEXT
+            )
+          end
+        end
       end
 
       context "with shorten_common_terms" do

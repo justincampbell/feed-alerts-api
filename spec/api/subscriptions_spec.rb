@@ -108,7 +108,9 @@ RSpec.describe SubscriptionsController do
             type: "subscriptions",
             attributes: {
               include_title: include_title,
-              shorten_common_terms: shorten_common_terms
+              shorten_common_terms: shorten_common_terms,
+              character_limit: character_limit,
+              include_link: include_link,
             },
             relationships: {
               feed: { data: { type: "feeds", id: feed.id.to_s } }
@@ -118,6 +120,8 @@ RSpec.describe SubscriptionsController do
       }
     }
 
+    let(:character_limit) { 11 }
+    let(:include_link) { false }
     let(:include_title) { true }
     let(:shorten_common_terms) { false }
 
@@ -128,7 +132,7 @@ RSpec.describe SubscriptionsController do
         create :item,
           feed: feed,
           title: "title",
-          content: "<p>text</p>"
+          content: "<p>text-long</p>"
       end
 
       it "generates a preview and returns it with the given options" do

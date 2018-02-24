@@ -29,6 +29,17 @@ class Subscription < ApplicationRecord
   end
 
   def render_item(item)
+    result = _render_item(item)
+
+    trim = 0
+    until result.length <= character_limit
+      result = _render_item(item, trim += 1)
+    end
+
+    result
+  end
+
+  def _render_item(item, trim = 0)
     lines = []
 
     if include_feed_name?
@@ -41,7 +52,13 @@ class Subscription < ApplicationRecord
 
     lines << ""
 
-    lines << shorten(item.text)
+    text = shorten(item.text)
+    text_size = text.length - trim
+    if text_size.nonzero?
+      lines << text[0, text_size]
+    else
+      raise "Never found a string that would fit"
+    end
 
     if include_link?
       lines << ""
