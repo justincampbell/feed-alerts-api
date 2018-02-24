@@ -180,5 +180,30 @@ RSpec.describe FeedsController do
         )
       end
     end
+
+    context "with a URL that already exists" do
+      before do
+        create :feed, url: url
+      end
+
+      it "returns a JSON error" do
+        post "/feeds", headers: headers, params: {
+          _jsonapi: {
+            data: {
+              type: "feeds",
+              attributes: {
+                kind: kind,
+                url: url
+              }
+            }
+          }
+        }
+
+        expect(response.status).to eq(403)
+        expect(parsed_response).to include_json(
+          errors: [{ detail: "Url has already been taken" }]
+        )
+      end
+    end
   end
 end

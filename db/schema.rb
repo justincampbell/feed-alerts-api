@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180204155930) do
+ActiveRecord::Schema.define(version: 20180224145316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20180204155930) do
     t.string "kind"
     t.bigint "created_by_id"
     t.index ["created_by_id"], name: "index_feeds_on_created_by_id"
+    t.index ["url"], name: "index_feeds_on_url", unique: true
   end
 
   create_table "que_jobs", primary_key: ["queue", "priority", "run_at", "job_id"], force: :cascade, comment: "3" do |t|
