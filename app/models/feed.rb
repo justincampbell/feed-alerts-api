@@ -10,6 +10,10 @@ class Feed < ApplicationRecord
   has_many :subscriptions,
     dependent: :destroy
 
+  validates :kind,
+    inclusion: { in: %w[rss] },
+    allow_nil: true
+
   validates :name,
     presence: true
 
