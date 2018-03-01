@@ -71,6 +71,7 @@ class Subscription < ApplicationRecord
   end
 
   def shorten(text)
+    return unless text
     return text unless shorten_common_terms?
     replacer.replace(text)
   end

@@ -228,6 +228,18 @@ RSpec.describe Subscription do
             TEXT
           )
         end
+
+        context "when title is nil" do
+          let(:title) { nil }
+
+          it "omits the item title" do
+            expect(render_item).to eq(
+              <<~TEXT.strip
+                hi
+              TEXT
+            )
+          end
+        end
       end
     end
 
