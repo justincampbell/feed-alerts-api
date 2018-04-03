@@ -41,5 +41,17 @@ RSpec.describe FeedCheckJob do
         job.perform feed_id
       end
     end
+
+    context "with a no parser error" do
+      before do
+        allow_any_instance_of(Feed)
+          .to receive(:fetch)
+          .and_raise(Feedjira::NoParserAvailable)
+      end
+
+      it "just returns" do
+        job.perform feed_id
+      end
+    end
   end
 end

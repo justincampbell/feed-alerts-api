@@ -1,7 +1,14 @@
 class FeedCheckJob < ApplicationJob
   def perform(feed_id)
     feed = Feed.find(feed_id)
-    feed_response = feed.fetch
+
+    begin
+      feed_response = feed.fetch
+    rescue Feedjira::NoParserAvailable => error
+      Rails.logger.error error
+      return
+      # TODO: Track feed errors in DB
+    end
 
     saved = feed_response.items.map(&:save)
 
