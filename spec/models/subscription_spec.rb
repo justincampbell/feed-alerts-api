@@ -202,6 +202,7 @@ RSpec.describe Subscription do
           before { subscription.character_limit = 36 }
 
           it "shortens the message body" do
+            expect(render_item.length).to eq(subscription.character_limit)
             expect(render_item).to eq(
               <<~TEXT.strip
                 Greetings Inc.

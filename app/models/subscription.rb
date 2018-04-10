@@ -31,9 +31,9 @@ class Subscription < ApplicationRecord
   def render_item(item)
     result = _render_item(item)
 
-    trim = 0
-    until result.length <= character_limit
-      result = _render_item(item, trim += 1)
+    delta = result.length - character_limit
+    if delta >= 0
+      result = _render_item(item, delta + 1) # Newline
     end
 
     result
@@ -54,11 +54,7 @@ class Subscription < ApplicationRecord
 
     text = shorten(item.text)
     text_size = text.length - trim
-    if text_size.nonzero?
-      lines << text[0, text_size]
-    else
-      raise "Never found a string that would fit"
-    end
+    lines << text[0, text_size]
 
     if include_link?
       lines << ""
