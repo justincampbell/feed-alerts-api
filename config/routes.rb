@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     post 'request-code'
   end
 
+  resources :events, only: %i[index]
+
   resources :feeds, only: %i[index create]
 
   resources :subscriptions, only: %i[create]
