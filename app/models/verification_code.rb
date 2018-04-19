@@ -8,6 +8,7 @@ class VerificationCode < ApplicationRecord
   attribute :code, :string, default: -> { generate }
 
   def self.generate
+    return "1234" if Rails.env.development?
     LENGTH.times.map { CHARACTERS.sample }.join
   end
 
