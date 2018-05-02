@@ -3,5 +3,6 @@ class SerializableUser < JSONAPI::Serializable::Resource
 
   has_many :events
 
+  attribute :admin
   attribute :sms_number
 end
