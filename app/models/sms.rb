@@ -41,6 +41,7 @@ class SMS
   def send(to, body)
     Rails.logger.info "[SMS] sending to #{to} #{body.inspect}"
     client.api.account.messages.create(from: from, to: to, body: body)
+    Event.record "sms-sent", sms_number: to, detail: body
   end
 
   def client

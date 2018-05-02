@@ -9,6 +9,9 @@ class AuthenticatesController < ApplicationController
 
   def destroy
     return unless current_session
+
+    Event.record "session-destroyed", user: current_session.user
+
     current_session.destroy!
   end
 
@@ -21,6 +24,8 @@ class AuthenticatesController < ApplicationController
 
     code = VerificationCode.store(sms_number)
     text = "#{code} is your verification code"
+
+    Event.record "verification-code-sent", sms_number: sms_number
 
     if Rails.env.development?
       Rails.logger.info text
@@ -42,6 +47,8 @@ class AuthenticatesController < ApplicationController
 
     user = User.find_or_create_by(sms_number: sms_number)
     session = user.sessions.create
+
+    Event.record "session-created", user: user
 
     render jsonapi: session,
       status: :created

@@ -9,10 +9,19 @@ class SubscriptionsController < ApplicationController
     subscription.user = current_user
 
     if subscription.save
+      Event.record "subscription-created",
+        user: current_user,
+        data: create_params
+
       render jsonapi: subscription,
         include: [:feed],
         status: :created
     else
+      Event.record "error",
+        user: current_user,
+        detail: subscription.errors.full_messages.to_sentence,
+        data: create_params
+
       render jsonapi_errors: subscription.errors,
         status: :forbidden
     end

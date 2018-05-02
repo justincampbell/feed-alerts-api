@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180419214639) do
+ActiveRecord::Schema.define(version: 20180428142709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20180419214639) do
     t.bigint "user_id", null: false
     t.string "code", null: false
     t.text "detail"
+    t.json "data", default: {}, null: false
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
