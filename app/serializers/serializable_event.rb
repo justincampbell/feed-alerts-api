@@ -7,4 +7,5 @@ class SerializableEvent < JSONAPI::Serializable::Resource
   attribute :code
   attribute :detail
   attribute :data
+  attribute :error
 end
