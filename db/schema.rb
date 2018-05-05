@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180428142709) do
+ActiveRecord::Schema.define(version: 20180505023515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,11 +18,12 @@ ActiveRecord::Schema.define(version: 20180428142709) do
 
   create_table "events", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "resource_id", null: false
     t.string "code", null: false
     t.text "detail"
     t.json "data", default: {}, null: false
-    t.index ["user_id"], name: "index_events_on_user_id"
+    t.string "resource_type", null: false
+    t.index ["resource_type", "resource_id"], name: "index_events_on_resource_type_and_resource_id"
   end
 
   create_table "feed_items", force: :cascade do |t|
@@ -101,7 +102,6 @@ ActiveRecord::Schema.define(version: 20180428142709) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "events", "users"
   add_foreign_key "feed_items", "feeds"
   add_foreign_key "feeds", "users", column: "created_by_id"
   add_foreign_key "sessions", "users"

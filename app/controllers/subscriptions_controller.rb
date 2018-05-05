@@ -10,7 +10,7 @@ class SubscriptionsController < ApplicationController
 
     if subscription.save
       Event.record "subscription-created",
-        user: current_user,
+        resource: current_user,
         data: create_params
 
       render jsonapi: subscription,
@@ -18,7 +18,7 @@ class SubscriptionsController < ApplicationController
         status: :created
     else
       Event.record "error",
-        user: current_user,
+        resource: current_user,
         detail: subscription.errors.full_messages.to_sentence,
         data: create_params
 

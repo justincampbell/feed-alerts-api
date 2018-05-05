@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :event do
-    user
+    association :resource, factory: :user
     code { Event::VALID_CODES.sample }
   end
 end

@@ -18,14 +18,14 @@ RSpec.describe Event do
     it "creates an event and assigns the attributes" do
       event = described_class.record(
         code,
-        user: user,
+        resource: user,
         detail: "detail",
         data: { abc: 123 }
       )
 
       event.reload
 
-      expect(event.user).to eq(user)
+      expect(event.resource).to eq(user)
       expect(event.detail).to eq("detail")
       expect(event.data).to eq({ "abc" => 123 })
     end
@@ -38,7 +38,7 @@ RSpec.describe Event do
       end
     end
 
-    context "with neither a user nor sms_number" do
+    context "with neither a resource nor sms_number" do
       it "raises an error" do
         expect {
           described_class.record(code)
