@@ -1,7 +1,13 @@
 class User < ApplicationRecord
-  has_many :events, dependent: :destroy
-  has_many :sessions, dependent: :destroy
-  has_many :subscriptions, dependent: :destroy
+  has_many :events,
+    as: :resource,
+    dependent: :destroy
+
+  has_many :sessions,
+    dependent: :destroy
+
+  has_many :subscriptions,
+    dependent: :destroy
 
   validates :sms_number,
     phone: { possible: true }
