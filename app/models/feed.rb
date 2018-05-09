@@ -32,19 +32,17 @@ class Feed < ApplicationRecord
     url: true
 
   def fetch
-    fetcher.fetch.tap(&:validate)
+    response = fetcher.fetch
+    response.validate
+    record_event "fetch"
+    response
   rescue StandardError => error
     unless detail = HANDLED_ERRORS[error.class]
       Raven.capture_exception error
       detail = "Unknown error"
     end
 
-    if persisted?
-      Event.record "fetch",
-        resource: self,
-        detail: detail,
-        error: true
-    end
+    record_event "fetch", detail: detail, error: true
 
     raise FeedFetchError.new(detail)
   end
@@ -65,5 +63,16 @@ class Feed < ApplicationRecord
     subscriptions.each do |subscription|
       FeedUpdatedJob.perform_later subscription.id
     end
+  end
+
+  private
+
+  def record_event(event, detail: nil, error: false)
+    return unless persisted?
+
+    Event.record event,
+      resource: self,
+      detail: detail,
+      error: error
   end
 end

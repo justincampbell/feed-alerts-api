@@ -45,9 +45,28 @@ RSpec.describe Feed do
         .and_return(feed_response)
     end
 
-    it "fetches the feed, validates, and returns a feed response" do
-      expect(feed_response).to receive(:validate)
+    it "returns a feed response" do
       expect(fetch).to eq(feed_response)
+    end
+
+    it "validates the response" do
+      expect(feed_response).to receive(:validate)
+      fetch
+    end
+
+    context "when persisted" do
+      before { feed.save! }
+
+      it "records an event" do
+        expect {
+          fetch
+        }.to change { Event.count }.by(1)
+
+        event = Event.last
+        expect(event.resource).to eq(feed)
+        expect(event.detail).to eq(nil)
+        expect(event.error).to eq(false)
+      end
     end
 
     {
@@ -74,6 +93,7 @@ RSpec.describe Feed do
           event = Event.last
           expect(event.resource).to eq(feed)
           expect(event.detail).to match(detail_regexp)
+          expect(event.error).to eq(true)
         end
       end
     end
