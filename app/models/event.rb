@@ -7,6 +7,8 @@ class Event < ApplicationRecord
     sms-sent
     subscription-created
     verification-code-sent
+
+    fetch
   ]
 
   belongs_to :resource,
@@ -15,7 +17,7 @@ class Event < ApplicationRecord
   validates :code,
     inclusion: { in: VALID_CODES }
 
-  def self.record(code, sms_number: nil, resource: nil, detail: nil, data: {})
+  def self.record(code, resource: nil, sms_number: nil, detail: nil, data: {}, error: false)
     if sms_number
       resource = User.find_or_create_by(sms_number: sms_number)
     end
@@ -26,7 +28,8 @@ class Event < ApplicationRecord
       resource: resource,
       code: code,
       detail: detail,
-      data: data
+      data: data,
+      error: error
     )
   end
 end

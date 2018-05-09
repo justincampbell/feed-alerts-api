@@ -57,4 +57,14 @@ RSpec.describe FeedResponse do
       expect(items.first.feed).to eq(feed)
     end
   end
+
+  describe "#validate" do
+    it "calls other methods to ensure there are no errors" do
+      expect(feed_response).to receive(:items)
+      expect(feed_response).to receive(:most_recent_item)
+      expect(feed_response).to receive(:title)
+
+      feed_response.validate
+    end
+  end
 end

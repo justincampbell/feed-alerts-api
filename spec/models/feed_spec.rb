@@ -45,8 +45,52 @@ RSpec.describe Feed do
         .and_return(feed_response)
     end
 
-    it "fetches the feed and returns a feed response" do
+    it "fetches the feed, validates, and returns a feed response" do
+      expect(feed_response).to receive(:validate)
       expect(fetch).to eq(feed_response)
+    end
+
+    {
+      Errno::ECONNREFUSED => /could not connect/i,
+      Feedjira::NoParserAvailable => /could not parse/i,
+      Net::OpenTimeout => /timeout/i,
+    }.each do |error_class, detail_regexp|
+      context "when #{error_class} is raised" do
+        before do
+          feed.save!
+
+          allow(feed.fetcher)
+            .to receive(:fetch)
+            .and_raise(error_class)
+        end
+
+        it "records an event and raises a FeedFetchError" do
+          expect {
+            expect {
+              fetch
+            }.to raise_error(FeedFetchError, detail_regexp)
+          }.to change { Event.count }.by(1)
+
+          event = Event.last
+          expect(event.resource).to eq(feed)
+          expect(event.detail).to match(detail_regexp)
+        end
+      end
+    end
+
+    context "when not a handled error" do
+      let(:error) { StandardError.new }
+
+      before do
+        allow(feed.fetcher)
+          .to receive(:fetch)
+          .and_raise(error)
+      end
+
+      it "reports to Sentry" do
+        expect(Raven).to receive(:capture_exception).with(error)
+        expect { fetch }.to raise_error(FeedFetchError, /unknown/i)
+      end
     end
   end
 

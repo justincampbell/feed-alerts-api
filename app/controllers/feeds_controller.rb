@@ -22,11 +22,8 @@ class FeedsController < ApplicationController
 
     begin
       feed.name = feed.fetch.title
-    rescue Feedjira::NoParserAvailable
-      render_jsonapi_error 422, "Not a valid XML feed"
-      return
-    rescue Errno::ECONNREFUSED
-      render_jsonapi_error 422, "Not a valid URL"
+    rescue FeedFetchError => error
+      render_jsonapi_error 422, error.message
       return
     end
 

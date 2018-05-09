@@ -64,7 +64,7 @@ RSpec.describe FeedsController do
     }
 
     let(:feed_response) {
-      double(FeedResponse, title: name)
+      double(FeedResponse, title: name, validate: true)
     }
 
     before do
@@ -129,7 +129,7 @@ RSpec.describe FeedsController do
 
     context "with an invalid feed for the given kind" do
       before do
-        allow_any_instance_of(Feed)
+        allow_any_instance_of(Fetcher)
           .to receive(:fetch)
           .and_raise(Feedjira::NoParserAvailable)
       end
@@ -149,14 +149,14 @@ RSpec.describe FeedsController do
 
         expect(response.status).to eq(422)
         expect(parsed_response).to include_json(
-          errors: [{ detail: "Not a valid XML feed" }]
+          errors: [{ detail: "Could not parse feed" }]
         )
       end
     end
 
     context "with an invalid URL" do
       before do
-        allow_any_instance_of(Feed)
+        allow_any_instance_of(Fetcher)
           .to receive(:fetch)
           .and_raise(Errno::ECONNREFUSED)
       end
@@ -176,7 +176,7 @@ RSpec.describe FeedsController do
 
         expect(response.status).to eq(422)
         expect(parsed_response).to include_json(
-          errors: [{ detail: "Not a valid URL" }]
+          errors: [{ detail: "Could not connect to URL" }]
         )
       end
     end

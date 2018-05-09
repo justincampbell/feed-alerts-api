@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
   before_action :set_raven_context
 
   before_action :slowdown
+
   private def slowdown
     sleep 0.25 if Rails.env.development?
   end

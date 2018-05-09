@@ -32,6 +32,12 @@ class FeedResponse
     }
   end
 
+  def validate
+    items
+    most_recent_item
+    title
+  end
+
   private
 
   def rss
