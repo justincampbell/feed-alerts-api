@@ -58,9 +58,10 @@ class ApplicationController < ActionController::API
   end
 
   def jsonapi_params
+    payload = params[:_jsonapi] || params
     ActionController::Parameters.new(
       ActiveModelSerializers::Deserialization.jsonapi_parse!(
-        params[:_jsonapi]
+        payload
       )
     )
   end
