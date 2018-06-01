@@ -38,6 +38,14 @@ RSpec.describe FeedItem do
       feed_item.content = entry.content
     end
 
+    context "when content is nil" do
+      before { feed_item.content = nil }
+
+      it "returns an empty string" do
+        expect(feed_item.text).to eq("")
+      end
+    end
+
     it "cleans and returns the entry content" do
       expect(feed_item.text).to eq(
         <<~TEXT

@@ -18,6 +18,7 @@ class FeedItem < ApplicationRecord
   end
 
   def text
+    return "" unless content.present?
     @text ||= Cleaner.clean(content)
   end
 end
